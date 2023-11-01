@@ -1,4 +1,5 @@
 import {Admin} from "../models/models.js";
+import { generateToken } from "../utils/jwt_token.js";
 
 
 export const createAdmin = async (req, res) => {
@@ -16,7 +17,8 @@ export const loginHandler = async (req, res) => {
         const admin = await Admin.findOne({email: email});
         if(admin){
             if(admin.password === password){
-                res.status(200).json({admin});
+                const token = generateToken(admin.email, admin.role);
+                res.status(200).json({token});
             }else{
                 res.status(400).json({error: "Invalid Credentials"});
             }
